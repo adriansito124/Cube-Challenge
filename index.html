@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubos</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        .cubo-container {
+            display: flex;
+            gap: 20px;
+            perspective: 800px;
+        }
+
+        .cubo {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transform-origin: center center;
+        }
+
+        .frente {
+            transform: translateZ(50px);
+        }
+
+        .tras {
+            transform: rotateY(180deg) translateZ(50px);
+        }
+
+        .direita {
+            transform: rotateY(90deg) translateZ(50px);
+        }
+
+        .esquerda {
+            transform: rotateY(-90deg) translateZ(50px);
+        }
+
+        .cima {
+            transform: rotateX(90deg) translateZ(50px);
+        }
+
+        .baixo {
+            transform: rotateX(-90deg) translateZ(50px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cubo-container">
+
+        <div class="cubo">
+            <div class="face cima"></div>
+            <div class="face frente"></div>
+            <div class="face baixo"></div>
+            <div class="face direita"></div>
+            <div class="face esquerda"></div>
+            <div class="face tras"></div>
+        </div>
+        <div class="cubo">
+            <div class="face cima"></div>
+            <div class="face frente"></div>
+            <div class="face baixo"></div>
+            <div class="face direita"></div>
+            <div class="face esquerda"></div>
+            <div class="face tras"></div>
+        </div>
+        <div class="cubo">
+            <div class="face cima"></div>
+            <div class="face frente"></div>
+            <div class="face baixo"></div>
+            <div class="face direita"></div>
+            <div class="face esquerda"></div>
+            <div class="face tras"></div>
+        </div>
+        <div class="cubo">
+            <div class="face cima"></div>
+            <div class="face frente"></div>
+            <div class="face baixo"></div>
+            <div class="face direita"></div>
+            <div class="face esquerda"></div>
+            <div class="face tras"></div>
+        </div>
+    </div>
+
+    <script>
+
+        let xRotation = 0;
+        let yRotation = 0;
+
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowUp') {
+                xRotation -= 90;
+            } else if (event.key === 'ArrowDown') {
+                xRotation += 90;
+            }
+
+            const cubos = document.querySelectorAll('.cubo');
+            cubos.forEach(cubo => {
+                cubo.style.transform = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+            });
+        });
+
+        fetch('respostas.csv')
+            .then(response => response.text())
+            .then(content => {
+                const linhas = content.split('\n');
+
+                const cubos = document.querySelectorAll('.cubo');
+                cubos.forEach((cubo, index) => {
+
+                    if (linhas[index]) {
+                        const cores = linhas[index].split(',');
+
+                        const corCima = cores[0];
+                        const corFrente = cores[1];
+                        const corBaixo = cores[2];
+                        const corDireita = cores[3];
+                        const corEsquerda = cores[4];
+                        const corTras = cores[5];
+
+                        cubo.querySelector('.frente').style.backgroundColor = `${corFrente}`;
+                        cubo.querySelector('.tras').style.backgroundColor = `${corTras}`;
+                        cubo.querySelector('.direita').style.backgroundColor = `${corDireita}`;
+                        cubo.querySelector('.esquerda').style.backgroundColor = `${corEsquerda}`;
+                        cubo.querySelector('.cima').style.backgroundColor = `${corCima}`;
+                        cubo.querySelector('.baixo').style.backgroundColor = `${corBaixo}`;
+                    }
+                });
+            })
+            .catch(error => console.error('Erro ao carregar o arquivo CSV:', error)); 
+    </script>
+
+</body>
+
+</html>
